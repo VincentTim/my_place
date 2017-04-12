@@ -1,0 +1,11 @@
+/**
+*
+* Main file for scss assets. The you can create variables that will be used in the differents scss stylesheets;
+* You can also define mixins functions, helpers.
+* The included stylesheets, according to the gulpfile, must be names _mystyle.scss;
+*
+* Variables ex: $path-imgs: 'thevalue';
+*               $color-link: #145625
+* Mixin ex: @mixin myfunction($var){ color: $var; }              
+*
+*/ 

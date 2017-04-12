@@ -1,0 +1,59 @@
+{
+  "name": "river",
+  "version": "2.0.0",
+  "description": "workflow",
+  "main": "gulpfile.js",
+  "author": "Vincent Rougier",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "6.0.2",
+    "del": "^2.0.2",
+    "expose-loader": "^0.7.1",
+    "gulp": "^3.9.0",
+    "gulp-combine-mq": "^0.4.0",
+    "gulp-copy": "0.0.2",
+    "gulp-debug": "^2.1.2",
+    "gulp-plumber": "1.0.1",
+    "gulp-postcss": "^6.0.1",
+    "gulp-sass": "^2.0.4",
+    "gulp-stats": "0.0.3",
+    "gulp-strip-css-comments": "^1.2.0",
+    "gulp-util": "3.0.6",
+    "gulp.spritesmith": "^4.1.1",
+    "imports-loader": "^0.6.5",
+    "run-sequence": "^1.1.5",
+    "uglify-loader": "^1.3.0",
+    "webpack": "^1.12.11",
+    "webpack-stream": "^3.1.0"
+  },
+  "scripts": {
+    "default": "gulp"
+  },
+  "paths": {
+    "assets": "app/Resources/assets/",
+    "views": "app/Resources/views/",
+    "dist": "web/dist/"
+  },
+  "dependencies": {
+    "datepicker-moment": "^2.0.2",
+    "fs": "0.0.1-security",
+    "imports-loader": "^0.6.5",
+    "jquery": "^1.11.3",
+    "jquery-ui": "^1.12.1",
+    "masonry-layout": "^4.1.1",
+    "material-design-icons": "^3.0.1",
+    "moment": "^2.11.1",
+    "select2": "^4.0.1",
+    "throttle-debounce": "^0.1.1",
+    "tinymce": "^4.4.3",
+    "underscore": "^1.8.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/VincentTim/my_river.git"
+  },
+  "bugs": {
+    "url": "https://github.com/VincentTim/my_river/issues"
+  },
+  "homepage": "https://github.com/VincentTim/my_river#readme"
+}
