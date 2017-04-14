@@ -6,6 +6,17 @@
 *
 * Variables ex: $path-imgs: 'thevalue';
 *               $color-link: #145625
-* Mixin ex: @mixin myfunction($var){ color: $var; }              
+* Mixin ex: @mixin border-radius($radius) {
+			  -webkit-border-radius: $radius;
+			  -moz-border-radius: $radius;
+			  -ms-border-radius: $radius;
+			  border-radius: $radius;
+			}
 *
-*/ 
+*/
+
+$path-mdi: '../fonts/material-design-icons/';
+
+@import 'vendors/_normalize.scss';
+@import 'vendors/materialize.scss';
+@import 'vendors/material-icons.scss';

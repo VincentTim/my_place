@@ -7,10 +7,15 @@
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "6.0.2",
+    "bootstrap": "^4.0.0-alpha.6",
+    "bootstrap-sass": "^3.3.7",
     "del": "^2.0.2",
     "expose-loader": "^0.7.1",
+    "foundation-sites": "^6.3.1",
     "gulp": "^3.9.0",
     "gulp-combine-mq": "^0.4.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-concat-css": "^2.3.0",
     "gulp-copy": "0.0.2",
     "gulp-debug": "^2.1.2",
     "gulp-plumber": "1.0.1",
@@ -32,7 +37,8 @@
   "paths": {
     "assets": "app/Resources/assets/",
     "views": "app/Resources/views/",
-    "dist": "web/dist/"
+    "dist": "web/dist/",
+    "googleIcons": "node_modules/material-design-icons/iconfont/"
   },
   "dependencies": {
     "datepicker-moment": "^2.0.2",
