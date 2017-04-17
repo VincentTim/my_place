@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3afb5479ab9303f8c5a842c08179c0e4",
+    "content-hash": "822417ae7173769615ef711f78af1f5b",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1003,6 +1003,50 @@
                 "minification"
             ],
             "time": "2016-11-11T18:43:20+00:00"
+        },
+        {
+            "name": "mgp25/instagram-php",
+            "version": "v1.5.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mgp25/Instagram-API.git",
+                "reference": "dd62c6dd47bf25129e536b134ab640512adfdb6c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mgp25/Instagram-API/zipball/dd62c6dd47bf25129e536b134ab640512adfdb6c",
+                "reference": "dd62c6dd47bf25129e536b134ab640512adfdb6c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-gd": "*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "mgp25",
+                    "email": "me@mgp25.com"
+                }
+            ],
+            "description": "Instagram private API PHP",
+            "keywords": [
+                "api",
+                "instagram",
+                "php",
+                "private"
+            ],
+            "time": "2016-09-27T08:11:47+00:00"
         },
         {
             "name": "monolog/monolog",
