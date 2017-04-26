@@ -1,0 +1,15 @@
+.item {
+  width:100vw;
+  min-width:320px;
+  max-width:640px;
+  background:#12EFAB;
+  margin:0 auto;
+
+  .content {
+    &__image {
+      img {
+        width:100%;
+      }
+    }
+  }
+}

@@ -20,3 +20,6 @@ $path-mdi: '../fonts/material-design-icons/';
 @import 'vendors/_normalize.scss';
 @import 'vendors/materialize.scss';
 @import 'vendors/material-icons.scss';
+@import 'vendors/font-awesome/font-awesome.scss';
+
+@import '_item.scss';
