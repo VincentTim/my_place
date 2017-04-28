@@ -3,7 +3,7 @@
 	"use strict";
 
 	var modules = [
-		
+		'_toggleContent'
 	];
 
 	var modulesLoaded = [];

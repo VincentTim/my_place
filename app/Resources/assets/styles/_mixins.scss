@@ -1,0 +1,6 @@
+
+@mixin itemTransition($property, $second) {
+  -webkit-transition: $property $second ease-out;
+  -moz-transition: $property $second ease-out;
+  transition: $property $second ease-out;
+}
