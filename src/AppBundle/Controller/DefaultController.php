@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\HttpFoundation\Response;
 
+use AppBundle\Entity\Post;
+
 class DefaultController extends Controller
 {
     /**
@@ -16,9 +18,9 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
+        $posts = $this->get('entity.management')->rep('Post')->findAll();
         return $this->render('default/index.html.twig', array(
-            'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            'posts' => $posts
         ));
     }
 

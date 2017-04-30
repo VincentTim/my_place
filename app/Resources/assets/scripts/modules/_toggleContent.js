@@ -8,12 +8,39 @@ module.exports = function(context){
 
     function toggleContent(){
 
-        $('.toggle_btn').click(function(){
-            console.log('test')
-            //Todo: toggle icon btn
-            //Todo: slide image 70px top
-            //Todo: slide description 100vw - 20px
-        });
+        $('.item').each(function(){
+            var elt = $(this);
+            var currentHeight = elt.width();
+            console.log(currentHeight);
+            var btnExpand = elt.find('.toggle__btn--expand');
+            var btnReduce = elt.find('.toggle__btn--reduce');
+            var wrapper = elt.find('.content__wrapper');
+
+            btnExpand.click(function(){
+                wrapper.toggleClass('content__wrapper--expand');
+                elt.toggleClass('item--expand');
+                elt.find('footer').toggleClass('footer--expand');
+                elt.find('header').toggleClass('header--expand');
+                elt.find('.content__overlay').fadeOut(500, function(){
+                    btnReduce.fadeTo(200, 0.6);
+                });
+            });
+
+            btnReduce.click(function(){
+
+                $(this).fadeOut(600, function(){
+                    elt.find('header').toggleClass('header--expand');
+                    elt.find('.content__overlay').fadeIn(500);
+
+                    elt.find('footer').toggleClass('footer--expand');
+                    elt.toggleClass('item--expand');
+                    wrapper.toggleClass('content__wrapper--expand');
+                })
+
+            });
+
+        })
+
 
     }
 

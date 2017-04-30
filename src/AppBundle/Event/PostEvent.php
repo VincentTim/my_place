@@ -11,15 +11,18 @@ class PostEvent extends Event
 {
     private $request;
     private $post;
+    private $media;
 
     /**
      * PostEvent constructor.
      * @param Post $post
+     * @param array() $media
      * @param Request $request
      */
-    public function __construct(Post $post, Request $request)
+    public function __construct(Post $post, $media, Request $request)
     {
         $this->post = $post;
+        $this->media = $media;
         $this->request = $request;
     }
 
@@ -30,6 +33,15 @@ class PostEvent extends Event
     public function getPost()
     {
         return $this->post;
+    }
+
+    /**
+     * @param $media
+     * @return mixed
+     */
+    public function getMedia()
+    {
+        return $this->media;
     }
 
     /**

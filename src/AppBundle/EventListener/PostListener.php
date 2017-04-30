@@ -7,13 +7,20 @@ use AppBundle\AppBundleEvents;
 use AppBundle\Event\PostEvent;
 use AppBundle\Event\CollectionEvent;
 
-use AppBundle\Entity\Place;
+use AppBundle\Entity\Image;
+use AppBundle\Entity\Location;
+use AppBundle\Entity\Caption;
 use AppBundle\Entity\Tag;
+
+use AppBundle\Services\EntityManagement as EntityManagement;
 
 class PostListener implements EventSubscriberInterface
 {
-    public function __construct()
+    private $entityManagement;
+
+    public function __construct(EntityManagement $entityManagement)
     {
+        $this->entityManagement = $entityManagement;
     }
 
     public static function getSubscribedEvents()
@@ -164,64 +171,76 @@ class PostListener implements EventSubscriberInterface
 
     public function contribute(PostEvent $event)
     {
-
-        //les fonctions appelées ici sont celles décrites dans la classe postevent
         $post = $event->getPost();
-        $id = $post->getId();
-        
-        $datas = $event->getRequest()->request->all();
-        
-        if(isset($datas['post']['sites'])){
-            foreach($datas['post']['sites'] as $places){
-                
-                $site = $places['site'];
-                $country = $places['country'];
-                
-                $place = new Place();
-                $place->setSite($site);
-                $place->setCountry($country);
-                
-                $post->setPlace($place);
+        $media = $event->getMedia();
+
+        $post->setIdInstagram($media['id']);
+        $post->setCreated($media['created_time']);
+        $post->setLink($media['link']);
+        $post->setLikes($media['likes']['count']);
+        $post->setType($media['type']);
+        $post->setIsInstagram(true);
+
+        foreach($media['images'] as $index => $pic){
+            $picted = $this->entityManagement->rep('Image')->findOneBy(array('url' => $pic['url']));
+            if(empty($picted)){
+                $image = new Image();
+            } else {
+                $image = $picted;
+            }
+
+            $image->setHeight($pic['height']);
+            $image->setWidth($pic['width']);
+            $image->setUrl($pic['url']);
+            $image->setType($index);
+
+            $image->setPost($post);
+            $post->addImage($image);
+
+        }
+
+        if(!empty($media['location']['id'])){
+            $place = $this->entityManagement->rep('Location')->findOneBy(array('id_instagram' => $media['location']['id']));
+            if(empty($place)){
+                $location = new Location();
+            } else {
+                $location = $place;
+            }
+            $location->setIdInstagram($media['location']['id']);
+            $location->setLatitude($media['location']['latitude']);
+            $location->setLongitude($media['location']['longitude']);
+            $location->setName($media['location']['name']);
+
+            $post->setLocation($location);
+        }
+
+        if(!empty($media['caption']['id'])){
+            $description = $this->entityManagement->rep('Caption')->findOneBy(array('text' => $media['caption']['text']));
+            if(empty($description)){
+                $caption = new Caption();
+            } else {
+                $caption = $description;
+            }
+            $caption->setIdInstagram($media['caption']['id']);
+            $caption->setText($media['caption']['text']);
+            $caption->setCreated($media['caption']['created_time']);
+
+            $post->setCaption($caption);
+        }
+
+        if(!empty($media['tags'])){
+            foreach($media['tags'] as $hash){
+                $word = $this->entityManagement->rep('Tag')->findOneBy(array('name' => $hash));
+                if(empty($word)){
+                    $tag = new Tag();
+                    $tag->setName($hash);
+                    $post->addTag($tag);
+                }
+
             }
         }
-        
-        if($post->getDescription() != "")
-        {
-            $post->setDescription($this->hashTag($post));
-            
-        }
 
-        //On ajoute les fichiers
-        if(count($post->getFiles()) > 0){
-            foreach($post->getFiles() as $file){
-                $file->upload();
-                $file->setPost($post);
-            }
-        }
-        
-        if(count($post->getTags()) > 0){
-            $arrayTags = array();
-            foreach($post->getTags() as $term){
-                $post->addTag($term);
-                $term->addPost($post); 
-                array_push($arrayTags, $term);
-            }  
-            $this->appendTag($post, $arrayTags);
-        }
 
-        if($post->getId() != null){
-            $post->setModification(new \DateTime());
-        }
-        else {
-            $post->setCreation(new \DateTime());
-            $post->setModification(new \DateTime());
-        }
-
-        if(null === $id){
-            $post->setView('0');
-        }
-        
-        $post->setSlug($this->seoRewrite($post->getTitle()));
         
     }
     

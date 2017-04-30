@@ -22,6 +22,13 @@ class Location
     private $id;
 
     /**
+     * @var \String
+     *
+     * @ORM\Column(name="id_instagram", type="string", unique=true)
+     */
+    private $id_instagram;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="latitude", type="string", length=255, nullable=true)
@@ -46,7 +53,6 @@ class Location
      * @ORM\OneToMany(targetEntity="Post", mappedBy="location")
      */
     private $posts;
-
     /**
      * Constructor
      */
@@ -63,6 +69,29 @@ class Location
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set id_instagram
+     *
+     * @param string $idInstagram
+     * @return Location
+     */
+    public function setIdInstagram($idInstagram)
+    {
+        $this->id_instagram = $idInstagram;
+
+        return $this;
+    }
+
+    /**
+     * Get id_instagram
+     *
+     * @return string 
+     */
+    public function getIdInstagram()
+    {
+        return $this->id_instagram;
     }
 
     /**

@@ -2,36 +2,66 @@
 
 {% block body %}
 <section>
+{% dump(posts) %}
 
-  <article class="item">
-    <header class="row">
-      <div class="col s12"><p>Gonsenheim, Rheinland-Pfalz, Germany</p></div>
-    </header>
-    <div class="row">
-      <div class="content content__image"><!--margin-top: 60px;-->
-        <div class="content__overlay">
-          <p>Wo ist der drache ?</p>
-          <a class="toggle_btn btn-floating btn-large waves-effect waves-light blue"><i class="material-icons">expand_less</i></a>
-        </div>
-          <img src="https://scontent.cdninstagram.com/t51.2885-15/e35/16465420_1196521583802687_8393041226588225536_n.jpg" />
+  {% for post in posts %}
+      <div>
+      {% if post.location is not empty %}
+        {{ post.location.name }}
+      {% endif %}
+      {{ post.caption.title|length > 20 ? post.caption.title|slice(0, 20)|raw ~ '...' : post.caption.title|raw  }}
+      {% for image in post.images %}
+          {% if image.type == 'low_resolution' %}
+            {{ image.url }}
+          {% endif %}
+      {% endfor %}
+      {{ post.caption.text|raw }}
+      {% if post.location is not empty %}
+          {{ post.location.latitude }}
+          {{ post.location.longitude }}
+      {% endif %}
+      {{ post.link }}
       </div>
-      <div class="col s12 content content__actions">
+  {% endfor %}
 
-      </div>
-      <div class="col s12 content content__description"><!--margin-top: calc(100vw + 15px);-->
-        <p>Wo ist der drache? :) #mainz #gonsenheim #drache #deutschland #wald #baum #woist #himmel</p>
-      </div>
-    </div>
-    <footer class="row">
-      <div class="col s12">
-        <a href="https://www.google.com/maps?q=50.0076371769,8.2167947787" target="_blank">
-          <i class="fa fa-map-marker"></i>
-        </a>
-        <a href="https://www.instagram.com/p/BQs3ak-gUkA/" target="_blank">
-          <i class="fa fa-instagram"></i></a>
-      </div>
-    </footer>
-  </article>
+  {#<article class="item">#}
+      {#{% if post.location is not empty %}#}
+        {#<header class="content row">#}
+          {#<div class="col s12"><p>{{ post.location.name }}</p></div>#}
+        {#</header>#}
+      {#{% endif %}#}
+    {#<div class="content__wrapper row">#}
+      {#<div class="content content__image"><!--margin-top: 60px;-->#}
+        {#<div class="content__overlay">#}
+          {#<p>{{ post.caption.title|length > 20 ? post.caption.title|slice(0, 20)|raw ~ '...' : post.caption.title|raw  }}</p>#}
+          {#<a class="toggle__btn toggle__btn--expand btn-floating btn-large waves-effect waves-light blue">#}
+            {#<i class="material-icons">expand_less</i>#}
+          {#</a>#}
+        {#</div>#}
+        {#<a class="hidden toggle__btn toggle__btn--reduce btn-floating waves-effect waves-light red">#}
+          {#<i class="material-icons">expand_more</i>#}
+        {#</a>#}
+          {#{% for image in post.images %}#}
+              {#{% if image.type == 'low_resolution' %}#}
+                {#<img src="{{ image.url }}" />#}
+              {#{% endif %}#}
+          {#{% endfor %}#}
+      {#</div>#}
+    {#</div>#}
+    {#<footer class="content row">#}
+      {#<div class="col s12">#}
+        {#<p>{{ post.caption.text|raw }}</p>#}
+          {#{% if post.location is not empty %}#}
+            {#<a href="https://www.google.com/maps?q=50.0076371769,8.2167947787" target="_blank">#}
+              {#<i class="fa fa-map-marker"></i>#}
+            {#</a>#}
+          {#{% endif %}#}
+        {#<a href="{{ post.link }}" target="_blank">#}
+          {#<i class="fa fa-instagram"></i></a>#}
+      {#</div>#}
+    {#</footer>#}
+  {#</article>#}
+
 </section>
 
   <!--<div class="admin-panel">

@@ -22,9 +22,16 @@ class Post
     private $id;
 
     /**
-     * @var \DateTime
+     * @var \String
      *
-     * @ORM\Column(name="created", type="datetime")
+     * @ORM\Column(name="id_instagram", type="string")
+     */
+    private $id_instagram;
+
+    /**
+     * @var \String
+     *
+     * @ORM\Column(name="created", type="string")
      */
     private $created;
 
@@ -52,27 +59,30 @@ class Post
     /**
      * @var string
      *
-     * @ORM\Column(name="tags", type="text", nullable=true)
+     * @ORM\Column(name="likes", type="string", length=255)
      */
-    private $tags;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="caption", type="text", nullable=true)
-     */
-    private $caption;
+    private $likes;
 
     /**
      * @var
-     * @ORM\OneToMany(targetEntity="Image", mappedBy="post")
+     * @ORM\OneToMany(targetEntity="Image", mappedBy="post", cascade={"persist", "remove"})
      */
     private $images;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Location", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Location", inversedBy="posts", cascade={"persist"})
      */
     private $location;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Caption", inversedBy="posts", cascade={"persist", "remove"})
+     */
+    private $caption;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Tag", cascade={"persist"})
+     */
+    private $tags;
 
     /**
      * Constructor
@@ -80,6 +90,7 @@ class Post
     public function __construct()
     {
         $this->images = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -93,9 +104,32 @@ class Post
     }
 
     /**
+     * Set id_instagram
+     *
+     * @param string $idInstagram
+     * @return Post
+     */
+    public function setIdInstagram($idInstagram)
+    {
+        $this->id_instagram = $idInstagram;
+
+        return $this;
+    }
+
+    /**
+     * Get id_instagram
+     *
+     * @return string 
+     */
+    public function getIdInstagram()
+    {
+        return $this->id_instagram;
+    }
+
+    /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param string $created
      * @return Post
      */
     public function setCreated($created)
@@ -108,7 +142,7 @@ class Post
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return string 
      */
     public function getCreated()
     {
@@ -185,49 +219,26 @@ class Post
     }
 
     /**
-     * Set tags
+     * Set likes
      *
-     * @param string $tags
+     * @param string $likes
      * @return Post
      */
-    public function setTags($tags)
+    public function setLikes($likes)
     {
-        $this->tags = $tags;
+        $this->likes = $likes;
 
         return $this;
     }
 
     /**
-     * Get tags
+     * Get likes
      *
      * @return string 
      */
-    public function getTags()
+    public function getLikes()
     {
-        return $this->tags;
-    }
-
-    /**
-     * Set caption
-     *
-     * @param string $caption
-     * @return Post
-     */
-    public function setCaption($caption)
-    {
-        $this->caption = $caption;
-
-        return $this;
-    }
-
-    /**
-     * Get caption
-     *
-     * @return string 
-     */
-    public function getCaption()
-    {
-        return $this->caption;
+        return $this->likes;
     }
 
     /**
@@ -284,5 +295,61 @@ class Post
     public function getLocation()
     {
         return $this->location;
+    }
+
+    /**
+     * Set caption
+     *
+     * @param \AppBundle\Entity\Caption $caption
+     * @return Post
+     */
+    public function setCaption(\AppBundle\Entity\Caption $caption = null)
+    {
+        $this->caption = $caption;
+
+        return $this;
+    }
+
+    /**
+     * Get caption
+     *
+     * @return \AppBundle\Entity\Caption 
+     */
+    public function getCaption()
+    {
+        return $this->caption;
+    }
+
+    /**
+     * Add tags
+     *
+     * @param \AppBundle\Entity\Tag $tags
+     * @return Post
+     */
+    public function addTag(\AppBundle\Entity\Tag $tags)
+    {
+        $this->tags[] = $tags;
+
+        return $this;
+    }
+
+    /**
+     * Remove tags
+     *
+     * @param \AppBundle\Entity\Tag $tags
+     */
+    public function removeTag(\AppBundle\Entity\Tag $tags)
+    {
+        $this->tags->removeElement($tags);
+    }
+
+    /**
+     * Get tags
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTags()
+    {
+        return $this->tags;
     }
 }
