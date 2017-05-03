@@ -16,6 +16,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use AppBundle\Event\PostEvent;
 
 use AppBundle\Entity\Post;
+use AppBundle\Form\PostType;
 
 class PostController extends Controller
 {
@@ -98,6 +99,18 @@ class PostController extends Controller
     public function postList(){
         $posted = $this->get('entity.management')->rep('Post')->findAll();
         var_dump(count($posted));
+        return new Response(1);
+    }
+
+    /**
+     * @Route("/post", name="post_form")
+     */
+    public function addPost(){
+        $form = $this->createForm(new PostType());
+
+        return $this->render('default/post.html.twig', array(
+            'form' => $form->createView()
+        ));
         return new Response(1);
     }
 }

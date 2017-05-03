@@ -43,9 +43,7 @@ class Post
     private $is_instagram;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="type", type="text")
+     * @ORM\ManyToOne(targetEntity="Mime", inversedBy="posts")
      */
     private $type;
 
@@ -173,29 +171,6 @@ class Post
     }
 
     /**
-     * Set type
-     *
-     * @param string $type
-     * @return Post
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string 
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
      * Set link
      *
      * @param string $link
@@ -239,6 +214,29 @@ class Post
     public function getLikes()
     {
         return $this->likes;
+    }
+
+    /**
+     * Set type
+     *
+     * @param \AppBundle\Entity\Mime $type
+     * @return Post
+     */
+    public function setType(\AppBundle\Entity\Mime $type = null)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return \AppBundle\Entity\Mime 
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
