@@ -122,7 +122,7 @@ Materialize.toast = function (message, displayLength, className, completeCallbac
 
       } else {
         toast.classList.remove('panning');
-        // Put toast back into original position
+        // Put toast back into standard_resolution position
         Vel(toast, { left: 0, opacity: 1 }, { duration: 300,
           easing: 'easeOutExpo',
           queue: false

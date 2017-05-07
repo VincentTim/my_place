@@ -3,7 +3,11 @@
 {% block body %}
 <section>
 
-    {{ form(form) }}
+
+
+  <form enctype="multipart/form-data" id="dropZone" method="post">
+      {{ form_widget(formImage.file) }}
+      {{ form_end(formImage) }}
 
 </section>
 

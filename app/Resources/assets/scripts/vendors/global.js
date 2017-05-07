@@ -12,7 +12,7 @@
  * raf.js
  * https://github.com/ngryman/raf.js
  *
- * original requestAnimationFrame polyfill by Erik Möller
+ * standard_resolution requestAnimationFrame polyfill by Erik Möller
  * inspired from paul_irish gist and post
  *
  * Copyright (c) 2013 ngryman

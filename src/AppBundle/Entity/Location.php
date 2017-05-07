@@ -24,7 +24,7 @@ class Location
     /**
      * @var \String
      *
-     * @ORM\Column(name="id_instagram", type="string", unique=true)
+     * @ORM\Column(name="id_instagram", type="string", unique=true, nullable=true)
      */
     private $id_instagram;
 
@@ -45,7 +45,7 @@ class Location
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 

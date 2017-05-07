@@ -227,7 +227,7 @@
             curr_index = $slider.find('.active').index();
 
             if (!swipeRight && !swipeLeft || $slides.length <=1) {
-              // Return to original spot
+              // Return to standard_resolution spot
               $curr_slide.velocity({ translateX: 0
                   }, {duration: 300, queue: false, easing: 'easeOutQuad'});
             }

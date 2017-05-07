@@ -174,6 +174,67 @@ class PostListener implements EventSubscriberInterface
         $post = $event->getPost();
         $media = $event->getMedia();
 
+        if($media !== null){
+            $this->fromInstagram($post, $media);
+        }
+
+        if($post->getCaption() != "")
+        {
+            $caption = $post->getCaption();
+            $caption->setText($this->hashTag($caption, $post));
+        }
+
+        if($post->getLocation() != ""){
+            $location = $post->getLocation();
+            $this->checkIs($post, $location);
+        }
+    }
+    
+    public function countUpdate(PostEvent $event)
+    {
+        $post = $event->getPost();
+        $this->updateView($post);
+    }
+
+    public function updateView($post){
+        $newCount = $post->getView() + 1;
+        $post->setView($newCount);
+    }
+    
+    public function hashTag($caption, $post){
+
+       $str = $caption->getText();
+       preg_match_all("/(#\w+)/", $str, $matches, PREG_OFFSET_CAPTURE);
+
+        foreach($matches[0] as $tag){
+            $name = str_replace('#', "", $tag[0]);
+            $existingTag = $this->entityManagement->rep('Tag')->findBy(array('name'=>$name));
+
+            if(empty($existingTag)){
+                $term = new Tag();
+                $term->setName($name);
+            } else {
+                $term = $existingTag[0];
+            }
+
+            $post->addTag($term);
+        }
+
+       $regex = "/#+([a-zA-Z0-9_]+)/";
+	   $str = preg_replace($regex, '<a href="#">$0</a>', $str);
+        
+	   return($str);
+    }
+    
+    public function appendTag($post, $arrayTags){
+        $content = $post->getDescription();
+        foreach($arrayTags as $index=>$tag){
+            $content.' #'.$tag->getName();    
+        }
+        $post->setDescription($content);
+    }
+
+    public function fromInstagram($post, $media){
         $post->setIdInstagram($media['id']);
         $post->setCreated($media['created_time']);
         $post->setLink($media['link']);
@@ -239,92 +300,62 @@ class PostListener implements EventSubscriberInterface
 
             }
         }
-
-
-        
-    }
-    
-    public function countUpdate(PostEvent $event)
-    {
-        $post = $event->getPost();
-        $this->updateView($post);
     }
 
-    public function collectionCountUpdate(CollectionEvent $event)
-    {
-        $post = $event->getCollection();
-        $this->updateView($post);
+    public function checkIs($post, $location){
+        $name = $location->getName();
+        $existingRecord = $this->entityManagement->rep('Location')->findBy(array('name'=>$name));
+        if(empty($existingRecord)){
+
+            $place = new Location();
+            $place->setName($name);
+
+            $coordinates = $this->getCoordinates($location);
+            $place->setLatitude($coordinates['lat']);
+            $place->setLongitude($coordinates['lng']);
+
+        } else {
+            $place = $existingRecord;
+        }
+
+        $post->setLocation($place);
     }
 
-    public function updateView($post){
-        $newCount = $post->getView() + 1;
-        $post->setView($newCount);
-    }
+    public function getCoordinates($location){
+        $access_token = 'AIzaSyCVRvGk10nM0kYhdV_lJye16kv2hgTe6LE';
+        $place = rawurlencode($location->getName());
+        $url = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$place.'&key='.$access_token;
 
-    public function contribute_collection(CollectionEvent $event)
-    {
+        $options = array(
+            CURLOPT_RETURNTRANSFER => true,     // return web page
+            CURLOPT_HEADER         => false,    // don't return headers
+            CURLOPT_FOLLOWLOCATION => true,     // follow redirects
+            CURLOPT_ENCODING       => "",       // handle all encodings
+            CURLOPT_USERAGENT      => "spider", // who am i
+            CURLOPT_AUTOREFERER    => true,     // set referer on redirect
+            CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
+            CURLOPT_TIMEOUT        => 120,      // timeout on response
+            CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+            CURLOPT_SSL_VERIFYPEER => false     // Disabled SSL Cert checks
+        );
 
-        //les fonctions appelées ici sont celles décrites dans la classe postevent
-        $collection = $event->getCollection();
-        $id = $collection->getId();
+        $ch      = curl_init( $url );
+        curl_setopt_array( $ch, $options );
+        $content = curl_exec( $ch );
+        $err     = curl_errno( $ch );
+        $errmsg  = curl_error( $ch );
+        $header  = curl_getinfo( $ch );
+        curl_close( $ch );
 
-        if(count($collection->getColtags()) > 0){
-            foreach($collection->getColtags() as $tag){
-                $tag->addCollection($collection);
-                $collection->addColtag($tag);
-            }
-        }
+        $header['errno']   = $err;
+        $header['errmsg']  = $errmsg;
+        $header['content'] = $content;
 
-        //On ajoute les fichiers
-        if(count($collection->getPosts()) > 0){
-            foreach($collection->getPosts() as $post){
-                $collection->addPost($post);
-                $post->addCollection($collection);
-            }
-        }
+        $response = json_decode($content, true);echo $url;
+        var_dump($response['results'][0]['geometry']['location']['lat']);
+        var_dump($response['results'][0]['geometry']['location']['lng']);
 
-        if($collection->getId() != null){
-            $collection->setModification(new \DateTime());
-        }
-        else {
-            $collection->setCreation(new \DateTime());
-            $collection->setModification(new \DateTime());
-        }
+        return $response['results'][0]['geometry']['location'];
 
-        if(null === $id){
-            $collection->setView('0');
-        }
-
-        $collection->setSlug($this->seoRewrite($collection->getTitle()));
-
-
-
-    }
-    
-    public function hashTag($post){
-       $str = $post->getDescription();
-       preg_match_all("/(#\w+)/", $str, $matches, PREG_OFFSET_CAPTURE);
-       
-       foreach($matches[0] as $tag){
-           $term = new Tag();
-           $term->setName(str_replace('#', "", $tag[0]));
-           $post->addTag($term);
-           $term->addPost($post);
-           
-       }
-        
-       $regex = "/#+([a-zA-Z0-9_]+)/";
-	   $str = preg_replace($regex, '<a href="#">$0</a>', $str);
-        
-	   return($str);
-    }
-    
-    public function appendTag($post, $arrayTags){
-        $content = $post->getDescription();
-        foreach($arrayTags as $index=>$tag){
-            $content.' #'.$tag->getName();    
-        }
-        var_dump($content);exit;
-        $post->setDescription($content);
     }
 }

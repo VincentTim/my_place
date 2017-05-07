@@ -428,7 +428,7 @@ DatePicker.prototype.validate = function( type, dateObject, options ) {
 
     var calendar = this,
 
-        // Keep a reference to the original date.
+        // Keep a reference to the standard_resolution date.
         originalDateObject = dateObject,
 
         // Make sure we have an interval.
@@ -498,7 +498,7 @@ DatePicker.prototype.validate = function( type, dateObject, options ) {
             }*/
 
 
-            // If we’ve looped into the next/prev month with a large interval, return to the original date and flatten the interval.
+            // If we’ve looped into the next/prev month with a large interval, return to the standard_resolution date and flatten the interval.
             if ( Math.abs( interval ) > 1 && ( dateObject.month < originalDateObject.month || dateObject.month > originalDateObject.month ) ) {
                 dateObject = originalDateObject
                 interval = interval > 0 ? 1 : -1
@@ -981,7 +981,7 @@ DatePicker.prototype.nodes = function( isOpen ) {
 
 
         // Create the calendar table head using a copy of weekday labels collection.
-        // * We do a copy so we don't mutate the original array.
+        // * We do a copy so we don't mutate the standard_resolution array.
         tableHead = (function( collection, fullCollection ) {
 
             // If the first day should be Monday, move Sunday to the end.

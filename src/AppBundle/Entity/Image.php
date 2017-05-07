@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Services\FileResize as FileResize;
 
 /**
  * Image
@@ -10,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="image")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ImageRepository")
  */
-class Image
+class Image extends FileResize
 {
     /**
      * @var int
@@ -45,16 +47,87 @@ class Image
     /**
      * @var string
      *
-     * @ORM\Column(name="url", type="string", length=255)
+     * @ORM\Column(name="file", type="string", length=255)
      */
-    private $url;
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @Assert\File()
+     */
+    private $file;
 
     /**
      * @var
-     * @ORM\ManyToOne(targetEntity="Post", inversedBy="images")
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="image", cascade={"persist", "remove"})
      */
-    private $post;
+    private $posts;
 
+    //Upload
+    protected function getUploadRootDir()
+    {
+        // the absolute directory path where uploaded
+        // documents should be saved
+        return __DIR__.'/../../../web/'.$this->getUploadDir();
+    }
+
+    protected function getUploadDir()
+    {
+        // get rid of the __DIR__ so it doesn't screw up
+        // when displaying uploaded doc/image in the view.
+        return 'upload/media/';
+    }
+
+    public function upload()
+    {
+        // the file property can be empty if the field is not required
+        if (null === $this->getFile()) {
+            return;
+        }
+
+        //
+
+        // use the standard_resolution file name here but you should
+        // sanitize it at least to avoid any security issues
+
+        $filename = sha1(uniqid(mt_rand(), true));
+        $this->name = $filename.'.'.$this->getFile()->guessExtension();
+
+        // move takes the target directory and then the
+        // target filename to move to
+        try {
+
+            $this->getFile()->move(
+                $this->getUploadRootDir(),
+                $this->name
+            );
+
+            $original = $this->getUploadRootDir().$this->name;
+            $target = $this->getUploadRootDir().'standard_resolution/'.$this->name;
+            $size = getimagesize($original);
+
+            $this->width = $size[0];//1000
+            $this->height = $size[1];//600
+            $this->type = $size['mime'];
+
+            $destWidth = '1000';
+
+            if($this->width < $destWidth){
+                $destWidth = $this->width;
+            }
+
+            $this->resize($destWidth, $target, $original);
+             return true;
+
+
+        } catch(\Exception $e){
+            var_dump($e);
+        }
+
+        // clean up the file property as you won't need it anymore
+        $this->file = null;
+    }
 
     /**
      * Get id
@@ -136,26 +209,26 @@ class Image
     }
 
     /**
-     * Set url
+     * Set name
      *
-     * @param string $url
+     * @param string $name
      * @return Image
      */
-    public function setUrl($url)
+    public function setName($name)
     {
-        $this->url = $url;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get url
+     * Get name
      *
      * @return string 
      */
-    public function getUrl()
+    public function getName()
     {
-        return $this->url;
+        return $this->name;
     }
 
     /**
@@ -179,5 +252,68 @@ class Image
     public function getPost()
     {
         return $this->post;
+    }
+
+    /**
+     * Set file
+     *
+     * @param string $file
+     * @return File
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * Get file
+     *
+     * @return string
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->posts = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add posts
+     *
+     * @param \AppBundle\Entity\Post $posts
+     * @return Image
+     */
+    public function addPost(\AppBundle\Entity\Post $posts)
+    {
+        $this->posts[] = $posts;
+
+        return $this;
+    }
+
+    /**
+     * Remove posts
+     *
+     * @param \AppBundle\Entity\Post $posts
+     */
+    public function removePost(\AppBundle\Entity\Post $posts)
+    {
+        $this->posts->removeElement($posts);
+    }
+
+    /**
+     * Get posts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPosts()
+    {
+        return $this->posts;
     }
 }

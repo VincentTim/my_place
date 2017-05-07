@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="post")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PostRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Post
 {
@@ -24,7 +25,7 @@ class Post
     /**
      * @var \String
      *
-     * @ORM\Column(name="id_instagram", type="string")
+     * @ORM\Column(name="id_instagram", type="string", unique=true, nullable=true)
      */
     private $id_instagram;
 
@@ -50,22 +51,22 @@ class Post
     /**
      * @var string
      *
-     * @ORM\Column(name="link", type="string", length=255)
+     * @ORM\Column(name="link", type="string", length=255, nullable=true)
      */
     private $link;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="likes", type="string", length=255)
+     * @ORM\Column(name="likes", type="string", length=255, nullable=true)
      */
     private $likes;
 
     /**
      * @var
-     * @ORM\OneToMany(targetEntity="Image", mappedBy="post", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="Image", inversedBy="posts")
      */
-    private $images;
+    private $image;
 
     /**
      * @ORM\ManyToOne(targetEntity="Location", inversedBy="posts", cascade={"persist"})
@@ -349,5 +350,38 @@ class Post
     public function getTags()
     {
         return $this->tags;
+    }
+
+    /**
+     * Set image
+     *
+     * @param string $image
+     * @return Post
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return string 
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedTime()
+    {
+        $this->created = time();
+
+        return $this;
     }
 }

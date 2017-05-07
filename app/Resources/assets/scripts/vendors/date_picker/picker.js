@@ -756,7 +756,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
             '<input ' +
             'type=hidden ' +
 
-            // Create the name using the original input’s with a prefix and suffix.
+            // Create the name using the standard_resolution input’s with a prefix and suffix.
             'name="' + name + '"' +
 
             // If the element has a value, set the hidden value as well.

@@ -20,9 +20,11 @@ $path-mdi: '../fonts/material-design-icons/';
 @import url('https://fonts.googleapis.com/css?family=Abril+Fatface');
 
 @import 'vendors/_normalize.scss';
+@import 'vendors/_croppie.scss';
 @import 'vendors/materialize.scss';
 @import 'vendors/material-icons.scss';
 @import 'vendors/font-awesome/font-awesome.scss';
+@import '../../../../node_modules/dropzone/src/basic.scss';
 @import '_mixins.scss';
 @import '_item.scss';
 

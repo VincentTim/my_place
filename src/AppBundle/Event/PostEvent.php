@@ -19,7 +19,7 @@ class PostEvent extends Event
      * @param array() $media
      * @param Request $request
      */
-    public function __construct(Post $post, $media, Request $request)
+    public function __construct(Post $post, Request $request, $media = null)
     {
         $this->post = $post;
         $this->media = $media;

@@ -4,7 +4,9 @@
 
 	var modules = [
 		'_toggleContent',
-        '_collection'
+        '_collection',
+		'_dropzone',
+		'_cropImage'
 	];
 
 	var modulesLoaded = [];

@@ -32,7 +32,7 @@
         var originalHeight = origin.height();
 
 
-        // If already modal, return to original
+        // If already modal, return to standard_resolution
         if (doneAnimating === false) {
           returnToOriginal();
           return false;
@@ -199,7 +199,7 @@
       });
 
 
-      // This function returns the modaled image to the original spot
+      // This function returns the modaled image to the standard_resolution spot
       function returnToOriginal() {
 
         doneAnimating = false;

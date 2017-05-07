@@ -277,7 +277,7 @@ m.isFunction(t)&&t(null,!0)}),f.queue(a,m.isString(v)?v:"",[])),"stop"===y?(i(a)
  * raf.js
  * https://github.com/ngryman/raf.js
  *
- * original requestAnimationFrame polyfill by Erik Möller
+ * standard_resolution requestAnimationFrame polyfill by Erik Möller
  * inspired from paul_irish gist and post
  *
  * Copyright (c) 2013 ngryman
@@ -1085,7 +1085,7 @@ if (jQuery) {
         var originalHeight = origin.height();
 
 
-        // If already modal, return to original
+        // If already modal, return to standard_resolution
         if (doneAnimating === false) {
           returnToOriginal();
           return false;
@@ -1252,7 +1252,7 @@ if (jQuery) {
       });
 
 
-      // This function returns the modaled image to the original spot
+      // This function returns the modaled image to the standard_resolution spot
       function returnToOriginal() {
 
         doneAnimating = false;
@@ -2322,7 +2322,7 @@ if (jQuery) {
 
       } else {
         toast.classList.remove('panning');
-        // Put toast back into original position
+        // Put toast back into standard_resolution position
         Vel(toast, { left: 0, opacity: 1 }, { duration: 300,
           easing: 'easeOutExpo',
           queue: false
@@ -3944,7 +3944,7 @@ if (jQuery) {
             curr_index = $slider.find('.active').index();
 
             if (!swipeRight && !swipeLeft || $slides.length <=1) {
-              // Return to original spot
+              // Return to standard_resolution spot
               $curr_slide.velocity({ translateX: 0
                   }, {duration: 300, queue: false, easing: 'easeOutQuad'});
             }
@@ -4825,7 +4825,7 @@ if (jQuery) {
           }
         }
       }).bind('panend', function(e) {
-        // Reset if collection is moved back into original position
+        // Reset if collection is moved back into standard_resolution position
         if (Math.abs(e.gesture.deltaX) < ($(this).innerWidth() / 2)) {
           swipeRight = false;
           swipeLeft = false;
@@ -5694,7 +5694,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
             '<input ' +
             'type=hidden ' +
 
-            // Create the name using the original input’s with a prefix and suffix.
+            // Create the name using the standard_resolution input’s with a prefix and suffix.
             'name="' + name + '"' +
 
             // If the element has a value, set the hidden value as well.
@@ -6489,7 +6489,7 @@ DatePicker.prototype.validate = function( type, dateObject, options ) {
 
     var calendar = this,
 
-        // Keep a reference to the original date.
+        // Keep a reference to the standard_resolution date.
         originalDateObject = dateObject,
 
         // Make sure we have an interval.
@@ -6559,7 +6559,7 @@ DatePicker.prototype.validate = function( type, dateObject, options ) {
             }*/
 
 
-            // If we’ve looped into the next/prev month with a large interval, return to the original date and flatten the interval.
+            // If we’ve looped into the next/prev month with a large interval, return to the standard_resolution date and flatten the interval.
             if ( Math.abs( interval ) > 1 && ( dateObject.month < originalDateObject.month || dateObject.month > originalDateObject.month ) ) {
                 dateObject = originalDateObject
                 interval = interval > 0 ? 1 : -1
@@ -7042,7 +7042,7 @@ DatePicker.prototype.nodes = function( isOpen ) {
 
 
         // Create the calendar table head using a copy of weekday labels collection.
-        // * We do a copy so we don't mutate the original array.
+        // * We do a copy so we don't mutate the standard_resolution array.
         tableHead = (function( collection, fullCollection ) {
 
             // If the first day should be Monday, move Sunday to the end.
