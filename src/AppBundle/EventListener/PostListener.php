@@ -2,6 +2,7 @@
 
 namespace AppBundle\EventListener;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use AppBundle\AppBundleEvents;
 use AppBundle\Event\PostEvent;
@@ -11,16 +12,19 @@ use AppBundle\Entity\Image;
 use AppBundle\Entity\Location;
 use AppBundle\Entity\Caption;
 use AppBundle\Entity\Tag;
-
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use AppBundle\Services\EntityManagement as EntityManagement;
 
 class PostListener implements EventSubscriberInterface
 {
     private $entityManagement;
+    private $exceptionListener;
 
-    public function __construct(EntityManagement $entityManagement)
+    public function __construct(EntityManagement $entityManagement, ExceptionListener $exceptionListener)
     {
         $this->entityManagement = $entityManagement;
+        $this->exceptionListener = $exceptionListener;
     }
 
     public static function getSubscribedEvents()
@@ -31,7 +35,27 @@ class PostListener implements EventSubscriberInterface
             AppBundleEvents::UPDATE_POST_VIEW_COUNT_EVENT => 'countUpdate',
             AppBundleEvents::ADD_COLLECTION_EVENT => 'contribute_collection',
             AppBundleEvents::UPDATE_COLLECTION_VIEW_COUNT_EVENT => 'collectionCountUpdate',
+            KernelEvents::EXCEPTION => array(
+        array('processException', 10),
+        array('logException', 0),
+        array('notifyException', -10),
+    )
         );
+    }
+
+    public function processException(GetResponseForExceptionEvent $event)
+    {
+        echo 'process';
+    }
+
+    public function logException(GetResponseForExceptionEvent $event)
+    {
+        echo 'log';
+    }
+
+    public function notifyException(GetResponseForExceptionEvent $event)
+    {
+        echo 'notify';
     }
     
     public function seoRewrite( $str, $utf8=true )
@@ -175,7 +199,7 @@ class PostListener implements EventSubscriberInterface
         $media = $event->getMedia();
 
         if($media !== null){
-            $this->fromInstagram($post, $media);
+            $this->fromInstagram($post, $media, $event);
         }
 
         if($post->getCaption() != "")
@@ -234,12 +258,13 @@ class PostListener implements EventSubscriberInterface
         $post->setDescription($content);
     }
 
-    public function fromInstagram($post, $media){
+    public function fromInstagram($post, $media, $event){
+
         $post->setIdInstagram($media['id']);
         $post->setCreated($media['created_time']);
         $post->setLink($media['link']);
         $post->setLikes($media['likes']['count']);
-        $post->setType($media['type']);
+        //$post->setType($media['type']);
         $post->setIsInstagram(true);
 
         foreach($media['images'] as $index => $pic){
@@ -255,8 +280,7 @@ class PostListener implements EventSubscriberInterface
             $image->setUrl($pic['url']);
             $image->setType($index);
 
-            $image->setPost($post);
-            $post->addImage($image);
+            $post->setImage($image);
 
         }
 

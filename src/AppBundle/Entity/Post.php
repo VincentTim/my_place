@@ -64,7 +64,7 @@ class Post
 
     /**
      * @var
-     * @ORM\ManyToOne(targetEntity="Image", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Image", inversedBy="posts", cascade={"persist"})
      */
     private $image;
 

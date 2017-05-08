@@ -62,7 +62,7 @@ class PostController extends Controller
         $request = new Request();
 
         $dispatcher = new EventDispatcher();
-        $subscriber = new PostListener($this->get('entity.management'));
+        $subscriber = new PostListener($this->get('entity.management'), $this->get('app.exception_listener'));
         $dispatcher->addSubscriber($subscriber);
 
 
@@ -75,7 +75,7 @@ class PostController extends Controller
                 $post = new Post();
             }
 
-            $event = new PostEvent($post, $media, $request);
+            $event = new PostEvent($post, $request, $media);
             $dispatcher->dispatch(AppBundleEvents::ADD_POST_EVENT, $event);
 
             if (null === $response = $event->getResponse()) {

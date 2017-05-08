@@ -1,36 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<section>
+<section class="row">
 {% dump(posts) %}
     {% for post in posts %}
-        <div>
-            {{ post.caption.text|raw }}
-            {% if post.image is not null %}
-                <img src="{{ asset('/upload/media/low_resolution/' ~ post.image.name) }}" width="100"/>
-            {% endif %}
+        <div class="col s4">
+            <div class="row">
+                {{ post.caption.text|raw }}
+                {% if post.image is not null %}
+                    {% if post.iSinstagram is null %}
+                        <img class="col s12" src="{{ asset('/upload/media/low_resolution/' ~ post.image.name) }}"/>
+                        {% else %}
+                        <img class="col s12" src="{{ image.link }}"/>
+                    {% endif %}
+                {% endif %}
+            </div>
         </div>
 
     {% endfor %}
-  {#{% for post in posts %}#}
-      {#<div>#}
-      {#{% if post.location is not empty %}#}
-        {#{{ post.location.name }}#}
-      {#{% endif %}#}
-      {#{{ post.caption.title|length > 20 ? post.caption.title|slice(0, 20)|raw ~ '...' : post.caption.title|raw  }}#}
-      {#{% for image in post.images %}#}
-          {#{% if image.type == 'low_resolution' %}#}
-            {#{{ image.name }}#}
-          {#{% endif %}#}
-      {#{% endfor %}#}
-      {#{{ post.caption.text|raw }}#}
-      {#{% if post.location is not empty %}#}
-          {#{{ post.location.latitude }}#}
-          {#{{ post.location.longitude }}#}
-      {#{% endif %}#}
-      {#{{ post.link }}#}
-      {#</div>#}
-  {#{% endfor %}#}
 
   {#<article class="item">#}
       {#{% if post.location is not empty %}#}
