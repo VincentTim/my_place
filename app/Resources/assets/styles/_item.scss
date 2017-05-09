@@ -1,11 +1,11 @@
 .item {
   width:100vw;
-  height:100vw;
+  height:calc(100vw/2);
   min-width:320px;
   max-width:640px;
   background:#12EFAB;
   margin:20px auto;
-  /*padding:15px 0;*/
+  cursor:pointer;
 
   &--expand {
     height: calc(100vw + 120px);

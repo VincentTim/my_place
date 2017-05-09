@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,7 +63,7 @@ class PostController extends Controller
         $request = new Request();
 
         $dispatcher = new EventDispatcher();
-        $subscriber = new PostListener($this->get('entity.management'), $this->get('app.exception_listener'));
+        $subscriber = new PostListener($this->get('entity.management'));
         $dispatcher->addSubscriber($subscriber);
 
 

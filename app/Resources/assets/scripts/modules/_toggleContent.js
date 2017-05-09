@@ -11,7 +11,6 @@ module.exports = function(context){
         $('.item').each(function(){
             var elt = $(this);
             var currentHeight = elt.width();
-            console.log(currentHeight);
             var btnExpand = elt.find('.toggle__btn--expand');
             var btnReduce = elt.find('.toggle__btn--reduce');
             var wrapper = elt.find('.content__wrapper');

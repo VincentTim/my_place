@@ -6,7 +6,8 @@
 		'_toggleContent',
         '_collection',
 		'_dropzone',
-		'_cropImage'
+		'_cropImage',
+		'_hashtag'
 	];
 
 	var modulesLoaded = [];

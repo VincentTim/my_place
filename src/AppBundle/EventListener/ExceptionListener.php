@@ -8,6 +8,8 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class ExceptionListener
 {
+    private $callback;
+
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         // You get the exception object from the received event
@@ -36,5 +38,10 @@ class ExceptionListener
 
         // Send the modified response object to the event
         $event->setResponse($response);
+        $this->callback = $response;
+    }
+
+    public function getResponse(){
+        return $this->callback;
     }
 }

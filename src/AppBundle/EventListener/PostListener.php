@@ -2,11 +2,10 @@
 
 namespace AppBundle\EventListener;
 
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\Exception as Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use AppBundle\AppBundleEvents;
 use AppBundle\Event\PostEvent;
-use AppBundle\Event\CollectionEvent;
 
 use AppBundle\Entity\Image;
 use AppBundle\Entity\Location;
@@ -19,12 +18,10 @@ use AppBundle\Services\EntityManagement as EntityManagement;
 class PostListener implements EventSubscriberInterface
 {
     private $entityManagement;
-    private $exceptionListener;
 
-    public function __construct(EntityManagement $entityManagement, ExceptionListener $exceptionListener)
+    public function __construct(EntityManagement $entityManagement)
     {
         $this->entityManagement = $entityManagement;
-        $this->exceptionListener = $exceptionListener;
     }
 
     public static function getSubscribedEvents()
@@ -35,27 +32,12 @@ class PostListener implements EventSubscriberInterface
             AppBundleEvents::UPDATE_POST_VIEW_COUNT_EVENT => 'countUpdate',
             AppBundleEvents::ADD_COLLECTION_EVENT => 'contribute_collection',
             AppBundleEvents::UPDATE_COLLECTION_VIEW_COUNT_EVENT => 'collectionCountUpdate',
-            KernelEvents::EXCEPTION => array(
-        array('processException', 10),
-        array('logException', 0),
-        array('notifyException', -10),
-    )
+            KernelEvents::EXCEPTION => 'getKernelEvents'
         );
     }
 
-    public function processException(GetResponseForExceptionEvent $event)
-    {
-        echo 'process';
-    }
-
-    public function logException(GetResponseForExceptionEvent $event)
-    {
-        echo 'log';
-    }
-
-    public function notifyException(GetResponseForExceptionEvent $event)
-    {
-        echo 'notify';
+    public function getKernelEvents(GetResponseForExceptionEvent $event){
+        var_dump($event);
     }
     
     public function seoRewrite( $str, $utf8=true )
@@ -200,18 +182,19 @@ class PostListener implements EventSubscriberInterface
 
         if($media !== null){
             $this->fromInstagram($post, $media, $event);
+        } else {
+            if($post->getCaption() != "")
+            {
+                $caption = $post->getCaption();
+                $caption->setText($this->hashTag($caption, $post));
+            }
+
+            if($post->getLocation() != ""){
+                $location = $post->getLocation();
+                $this->checkIs($post, $location);
+            }
         }
 
-        if($post->getCaption() != "")
-        {
-            $caption = $post->getCaption();
-            $caption->setText($this->hashTag($caption, $post));
-        }
-
-        if($post->getLocation() != ""){
-            $location = $post->getLocation();
-            $this->checkIs($post, $location);
-        }
     }
     
     public function countUpdate(PostEvent $event)
@@ -286,28 +269,37 @@ class PostListener implements EventSubscriberInterface
 
         if(!empty($media['location']['id'])){
             $place = $this->entityManagement->rep('Location')->findOneBy(array('id_instagram' => $media['location']['id']));
-            if(empty($place)){
+
+            if($place === null){
+
                 $location = new Location();
             } else {
                 $location = $place;
             }
+
             $location->setIdInstagram($media['location']['id']);
             $location->setLatitude($media['location']['latitude']);
             $location->setLongitude($media['location']['longitude']);
             $location->setName($media['location']['name']);
+            $location->addPost($post);
 
             $post->setLocation($location);
         }
 
         if(!empty($media['caption']['id'])){
-            $description = $this->entityManagement->rep('Caption')->findOneBy(array('text' => $media['caption']['text']));
-            if(empty($description)){
+            $description = $this->entityManagement->rep('Caption')->findOneBy(array('idInstagram' => $media['caption']['id']));
+            if(null === $description){
                 $caption = new Caption();
             } else {
                 $caption = $description;
             }
             $caption->setIdInstagram($media['caption']['id']);
-            $caption->setText($media['caption']['text']);
+
+            $str = $media['caption']['text'];
+            preg_match_all("/(#\w+)/", $str, $matches, PREG_OFFSET_CAPTURE);
+            $regex = "/#+([a-zA-Z0-9_]+)/";
+            $str = preg_replace($regex, '<a href="#">$0</a>', $str);
+            $caption->setText($str);
             $caption->setCreated($media['caption']['created_time']);
 
             $post->setCaption($caption);
@@ -315,6 +307,7 @@ class PostListener implements EventSubscriberInterface
 
         if(!empty($media['tags'])){
             foreach($media['tags'] as $hash){
+
                 $word = $this->entityManagement->rep('Tag')->findOneBy(array('name' => $hash));
                 if(empty($word)){
                     $tag = new Tag();
@@ -375,9 +368,7 @@ class PostListener implements EventSubscriberInterface
         $header['errmsg']  = $errmsg;
         $header['content'] = $content;
 
-        $response = json_decode($content, true);echo $url;
-        var_dump($response['results'][0]['geometry']['location']['lat']);
-        var_dump($response['results'][0]['geometry']['location']['lng']);
+        $response = json_decode($content, true);
 
         return $response['results'][0]['geometry']['location'];
 

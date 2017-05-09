@@ -1,19 +1,25 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<section class="row">
+<section class="post_container row">
 {% dump(posts) %}
     {% for post in posts %}
-        <div class="col s4">
+        {% set tabfruit = [] %}
+        {% for t in post.tags %}
+            {% set tabfruit = tabfruit|merge([t.name]) %}
+        {% endfor %}
+        <div class="item col s4" data-tags="{{ tabfruit|join(',') }}">
             <div class="row">
-                {{ post.caption.text|raw }}
+                <div>
                 {% if post.image is not null %}
                     {% if post.iSinstagram is null %}
                         <img class="col s12" src="{{ asset('/upload/media/low_resolution/' ~ post.image.name) }}"/>
                         {% else %}
-                        <img class="col s12" src="{{ image.link }}"/>
+                        <img class="col s12" src="{{ post.image.url }}"/>
                     {% endif %}
                 {% endif %}
+                </div>
+                {#<div class="col s12">{{ post.caption.text|raw }}</div>#}
             </div>
         </div>
 

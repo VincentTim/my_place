@@ -83,12 +83,12 @@ class Post
      */
     private $tags;
 
+
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->images = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -241,36 +241,26 @@ class Post
     }
 
     /**
-     * Add images
+     * Set image
      *
-     * @param \AppBundle\Entity\Image $images
+     * @param \AppBundle\Entity\Image $image
      * @return Post
      */
-    public function addImage(\AppBundle\Entity\Image $images)
+    public function setImage(\AppBundle\Entity\Image $image = null)
     {
-        $this->images[] = $images;
+        $this->image = $image;
 
         return $this;
     }
 
     /**
-     * Remove images
+     * Get image
      *
-     * @param \AppBundle\Entity\Image $images
+     * @return \AppBundle\Entity\Image 
      */
-    public function removeImage(\AppBundle\Entity\Image $images)
+    public function getImage()
     {
-        $this->images->removeElement($images);
-    }
-
-    /**
-     * Get images
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getImages()
-    {
-        return $this->images;
+        return $this->image;
     }
 
     /**
@@ -353,35 +343,9 @@ class Post
     }
 
     /**
-     * Set image
-     *
-     * @param string $image
-     * @return Post
-     */
-    public function setImage($image)
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
-    /**
-     * Get image
-     *
-     * @return string 
-     */
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    /**
      * @ORM\PrePersist
      */
-    public function setCreatedTime()
-    {
+    public function prePersist(){
         $this->created = time();
-
-        return $this;
     }
 }
