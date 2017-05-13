@@ -2,6 +2,7 @@
 
 namespace AppBundle\EventListener;
 
+use AppBundle\Services\CurlRequest;
 use Doctrine\DBAL\Exception as Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use AppBundle\AppBundleEvents;
@@ -18,10 +19,12 @@ use AppBundle\Services\EntityManagement as EntityManagement;
 class PostListener implements EventSubscriberInterface
 {
     private $entityManagement;
+    private $curl;
 
-    public function __construct(EntityManagement $entityManagement)
+    public function __construct(EntityManagement $entityManagement, CurlRequest $curl = null)
     {
         $this->entityManagement = $entityManagement;
+        $this->curl = $curl;
     }
 
     public static function getSubscribedEvents()
@@ -333,10 +336,10 @@ class PostListener implements EventSubscriberInterface
             $place->setLongitude($coordinates['lng']);
 
         } else {
-            $place = $existingRecord;
+            $place = $existingRecord[0];
         }
 
-        $post->setLocation($place[0]);
+        $post->setLocation($place);
     }
 
     public function getCoordinates($location){
@@ -372,6 +375,14 @@ class PostListener implements EventSubscriberInterface
         $response = json_decode($content, true);
 
         return $response['results'][0]['geometry']['location'];
+
+    }
+
+    function getUsersHadLiked($media_id){
+        $access_token = $this->getParameter('instagram_key');
+        $url = 'https://api.instagram.com/v1/media/'.$media_id.'/likes?access_token='.$access_token;
+
+        $content = $this->curkl->createCurl($url);
 
     }
 }

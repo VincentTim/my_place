@@ -27,6 +27,7 @@ $c-water-green: #26a69a;
 @import 'vendors/materialize.scss';
 @import 'vendors/material-icons.scss';
 @import 'vendors/font-awesome/font-awesome.scss';
+@import '../../../../node_modules/cropper/dist/cropper.scss';
 @import '_mixins.scss';
 @import '_item.scss';
 @import '_classes.scss';

@@ -118,18 +118,27 @@ class Image extends FileResize
             $this->height = $size[1];//600
             $this->type = $size['mime'];
 
-            $destWidth = '1000';
 
-            if($this->width < $destWidth){
-                $destWidth = $this->width;
+            $infos = exif_read_data($original);
+
+            //orientation 1 paysage et orientation 6 portrait
+            switch($infos['Orientation']){
+                case '1':
+                    $destHeight = '640';
+                    $destWidth = null;
+                    break;
+                case '6':
+                    $destWidth = '640';
+                    $destHeight = null;
+                    break;
             }
 
-            $this->resize($destWidth, $target, $original);
+            $this->resize($destWidth, $destHeight, $target, $original);
              return true;
 
 
         } catch(\Exception $e){
-            var_dump($e);
+            var_dump($e->getMessage());
         }
 
         // clean up the file property as you won't need it anymore

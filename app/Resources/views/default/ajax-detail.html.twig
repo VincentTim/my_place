@@ -1,8 +1,17 @@
 
+<section class="row">
+    <article class="col l8" style="width:70%">
+        {% if post.isInstagram is not empty %}
+            <img src="{{ post.image.url }}" width="480"/>
+        {% else %}
+            <img src="{{ asset('/upload/media/low_resolution/' ~ post.image.name) }}" width="480"/>
+        {% endif %}
+    </article>
+    <aside class="col l4" style="width:30%">
+        <p>{{ post.caption.text | raw }}</p>
+        <p>{{ post.likes }}</p>
+    </aside>
 
-{% if post.isInstagram is not empty %}
-    <img src="{{ post.image.url }}" width="480"/>
-    {% else %}
-        <img src="{{ asset('/upload/media/low_resolution/' ~ post.image.name) }}" width="480"/>
-{% endif %}
+</section>
+
 

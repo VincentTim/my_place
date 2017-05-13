@@ -9,6 +9,11 @@ services:
             arguments: [~ , "@doctrine.orm.entity_manager"]
             tags:
              - { name: entity.management }
+    curl.request:
+                class: AppBundle\Services\CurlRequest
+                arguments: [~]
+                tags:
+                 - { name: curl.request }
 #    app.exception_listener:
 #            class: AppBundle\EventListener\ExceptionListener
 #            tags:

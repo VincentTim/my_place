@@ -10,7 +10,7 @@ class FileResize
 {
 
 
-    function resize($newWidth, $targetFile, $originalFile) {
+    function resize($newWidth, $newHeight, $targetFile, $originalFile) {
 
         $info = getimagesize($originalFile);
         $mime = $info['mime'];
@@ -41,14 +41,33 @@ class FileResize
         $img = $image_create_func($originalFile);
         list($width, $height) = getimagesize($originalFile);
 
-        $newHeight = ($height / $width) * $newWidth;
-        $tmp = imagecreatetruecolor($newWidth, $newHeight);
-        imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+        //IMAGE PAYSAGE
+        if(null === $newWidth){
+            //3000*2000
+            //    *640
+            $distHeight = $newHeight;
+            $distWidth = ($newHeight * $width) / $height;
+        }
+        //IMAGE PORTRAIT
+        if(null === $newHeight){
+            //2000*3000
+            //640
+            $distWidth = $newWidth;
+            $distHeight = ($newWidth * $height) / $width;
+        }
+
+
+        $tmp = imagecreatetruecolor($distWidth, $distHeight);
+
+        imagecopyresampled($tmp, $img, 0, 0, 0, 0, $distWidth, $distHeight, $width, $height);
 
         if (file_exists($targetFile)) {
             unlink($targetFile);
         }
-        $image_save_func($tmp, "$targetFile");
+        if(!$image_save_func($tmp, "$targetFile")){
+            echo 'failed';
+            die();
+        };
     }
 
 
