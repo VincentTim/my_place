@@ -112,7 +112,7 @@ class PostController extends Controller
     }
 
     /**
-     * @Route("/post", name="post_form_image")
+     * @Route("/add/post", name="post_form_image")
      */
     public function addImage(Request $request){
         $form = $this->createForm(new PostType());
@@ -146,7 +146,7 @@ class PostController extends Controller
     }
 
     /**
-     * @Route("/post/crop/{id}", name="post_crop")
+     * @Route("/add/crop/{id}", name="post_crop")
      */
     public function cropImage($id, Request $request){
 
@@ -159,7 +159,7 @@ class PostController extends Controller
     }
 
     /**
-     * @Route("/post/content", name="post_form_content")
+     * @Route("/add/content", name="post_form_content")
      */
     public function addPost(Request $request){
 
@@ -206,7 +206,7 @@ class PostController extends Controller
     }
 
     /**
-     * @Route("/post/content/add", name="post_form_contribute")
+     * @Route("/add/content/post", name="post_form_contribute")
      */
     public function contributePost(Request $request){
 

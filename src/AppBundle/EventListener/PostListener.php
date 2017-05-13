@@ -322,6 +322,7 @@ class PostListener implements EventSubscriberInterface
     public function checkIs($post, $location){
         $name = $location->getName();
         $existingRecord = $this->entityManagement->rep('Location')->findBy(array('name'=>$name));
+
         if(empty($existingRecord)){
 
             $place = new Location();
@@ -335,7 +336,7 @@ class PostListener implements EventSubscriberInterface
             $place = $existingRecord;
         }
 
-        $post->setLocation($place);
+        $post->setLocation($place[0]);
     }
 
     public function getCoordinates($location){

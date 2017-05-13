@@ -5,9 +5,10 @@
 	var modules = [
 		'_toggleContent',
         '_collection',
-		'_dropzone',
 		'_cropImage',
-		'_hashtag'
+		'_hashtag',
+		'_item',
+		'_modal'
 	];
 
 	var modulesLoaded = [];

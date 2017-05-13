@@ -1,11 +1,11 @@
 .item {
-  width:100vw;
-  height:calc(100vw/2);
   min-width:320px;
   max-width:640px;
-  background:#12EFAB;
-  margin:20px auto;
+  margin-bottom:15px;
+  margin-right:15px;
+  background-size:cover;
   cursor:pointer;
+  height:100%;
 
   &--expand {
     height: calc(100vw + 120px);
@@ -86,4 +86,27 @@
 
 .hidden {
   display:none;
+}
+
+.loader{
+  margin: 0 0 2em;
+  height: 100px;
+  width: 20%;
+  text-align: center;
+  padding: 1em;
+  margin: 0 auto 1em;
+  display: inline-block;
+  vertical-align: top;
+  display:none;
+  &--visible {
+    display:block;
+  }
+}
+
+/*
+  Set the color of the icon
+*/
+svg path,
+svg rect{
+  fill: $c-water-green;
 }

@@ -16,6 +16,9 @@
 */
 
 $path-mdi: '../fonts/material-design-icons/';
+$path-img: '../../upload/media/low_resolution/';
+
+$c-water-green: #26a69a;
 
 @import url('https://fonts.googleapis.com/css?family=Abril+Fatface');
 
@@ -24,7 +27,7 @@ $path-mdi: '../fonts/material-design-icons/';
 @import 'vendors/materialize.scss';
 @import 'vendors/material-icons.scss';
 @import 'vendors/font-awesome/font-awesome.scss';
-@import '../../../../node_modules/dropzone/src/basic.scss';
 @import '_mixins.scss';
 @import '_item.scss';
+@import '_classes.scss';
 

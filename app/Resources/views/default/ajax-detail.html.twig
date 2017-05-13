@@ -1,0 +1,8 @@
+
+
+{% if post.isInstagram is not empty %}
+    <img src="{{ post.image.url }}" width="480"/>
+    {% else %}
+        <img src="{{ asset('/upload/media/low_resolution/' ~ post.image.name) }}" width="480"/>
+{% endif %}
+

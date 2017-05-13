@@ -10,10 +10,12 @@ module.exports = function(context){
 
     function crop(){
         $("#cropbox").Jcrop({
-            aspectRatio: 1,
             onSelect: checkCoords,
             onChange: updateCoords,
-            maxSize: [640,640]
+            maxSize: [640,640],
+            setSelect: [0,0,640,640],
+            aspectRatio: 1
+
         });
     }
 
@@ -28,7 +30,7 @@ module.exports = function(context){
     function checkCoords()
     {
         if (parseInt($('#w').val())) return true;
-        alert('Please select a crop region then press submit.');
+        //alert('Please select a crop region then press submit.');
         return false;
     };
 

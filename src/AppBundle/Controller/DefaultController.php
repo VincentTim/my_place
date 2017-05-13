@@ -25,6 +25,48 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/post/{id}", name="post_detail")
+     */
+    public function modalAction($id=null){
+
+        $post = $this->get('entity.management')->rep('Post')->find($id);
+        return $this->render('default/ajax-detail.html.twig', array(
+            'post' => $post
+        ));
+    }
+
+    /**
+     * @Route("/generate-classes", name="post_classes")
+     */
+    public function createClass(){
+
+        $posts = $this->get('entity.management')->rep('Post')->findAll();
+
+        $file = __DIR__.'/../../../app/Resources/assets/styles/_classes.scss';
+        $current = file_get_contents($file);
+
+        $current .= '.content {';
+        foreach($posts as $post){
+
+            $current .= '&-c'.$post->getId().' {';
+            if(!empty($post->getIsInstagram())){
+                $current .= 'background-image: url("'.$post->getImage()->getUrl().'")';
+            } else {
+                $current .= 'background-image: url($path-img + "'.$post->getImage()->getName().'")';
+            }
+
+            $current .= '}';
+        }
+        $current .= '}';
+
+        file_put_contents($file, $current);
+
+        return new Response(1);
+    }
+
+
+
+    /**
      * @Route("/test", name="test")
      */
     public function test(){
