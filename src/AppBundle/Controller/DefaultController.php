@@ -36,6 +36,15 @@ class DefaultController extends Controller
     }
 
     /**
+     * @param $tag
+     * @return Response
+     * @Route("/explore/{tag}", name="post_explore")
+     */
+    public function exploreAction($tag){
+      return new Response($tag);
+    }
+
+    /**
      * @Route("/generate-classes", name="post_classes")
      */
     public function createClass(){

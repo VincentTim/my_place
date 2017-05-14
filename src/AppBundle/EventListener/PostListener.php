@@ -377,12 +377,4 @@ class PostListener implements EventSubscriberInterface
         return $response['results'][0]['geometry']['location'];
 
     }
-
-    function getUsersHadLiked($media_id){
-        $access_token = $this->getParameter('instagram_key');
-        $url = 'https://api.instagram.com/v1/media/'.$media_id.'/likes?access_token='.$access_token;
-
-        $content = $this->curkl->createCurl($url);
-
-    }
 }

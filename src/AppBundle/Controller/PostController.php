@@ -26,69 +26,6 @@ use AppBundle\Services\EntityManagement as EntityManagement;
 class PostController extends Controller
 {
     /**
-     * @Route("/instagram/import", name="post_import_instagram_content")
-     */
-    public function contribute(){
-        $access_token = $this->getParameter('instagram_key');
-        $url = 'https://api.instagram.com/v1/users/self/media/recent/?access_token='.$access_token;
-
-        $content = $this->get('curl.request')->createCurl($url);
-
-        $response = json_decode($content, true);
-        $medias = $response['data'];
-
-        $request = new Request();
-
-        $dispatcher = new EventDispatcher();
-        $subscriber = new PostListener($this->get('entity.management'), $this->get('curl.request'));
-        $dispatcher->addSubscriber($subscriber);
-
-
-        foreach($medias as $media){
-
-            $posted = $this->get('entity.management')->rep('Post')->findOneBy(array('id_instagram' => $media['id']));
-            if(!empty($posted)){
-                $post = $posted;
-            } else {
-                $post = new Post();
-            }
-
-            $event = new PostEvent($post, $request, $media);
-            $dispatcher->dispatch(AppBundleEvents::ADD_POST_EVENT, $event);
-
-            if (null === $response = $event->getResponse()) {
-
-                if ($event->getPost()->getId() != null) {
-                    $this->get('entity.management')->update($post);
-                } else {
-                    $this->get('entity.management')->add($post);
-
-                }
-
-            }
-        }
-
-        $response = $this->redirectToRoute('post_list', array(), 301);
-        return $response;
-
-
-    }
-
-    /**
-     * @Route("/instagram", name="post_list")
-     */
-    public function postList(){
-        $posted = $this->get('entity.management')->rep('Post')->findAll();
-        var_dump(count($posted));
-
-        return $this->render('default/index.html.twig', array(
-            'posts' => $posted
-        ));
-
-        return new Response(1);
-    }
-
-    /**
      * @Route("/add/post", name="post_form_image")
      */
     public function addImage(Request $request){
