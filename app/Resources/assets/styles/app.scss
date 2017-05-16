@@ -17,6 +17,15 @@
 
 $path-mdi: '../fonts/material-design-icons/';
 $path-img: '../../upload/media/low_resolution/';
+$path-src-img: '../images';
+
+$breakpoint-ssss: 320px;
+$breakpoint-sss: 361px;
+$breakpoint-ss: 481px;
+$breakpoint-s: 601px;
+$breakpoint-m: 991px;
+$breakpoint-l: 1199px;
+$breakpoint-xl: 1200px;
 
 $c-water-green: #26a69a;
 
@@ -24,11 +33,10 @@ $c-water-green: #26a69a;
 
 @import 'vendors/_normalize.scss';
 @import 'vendors/_croppie.scss';
-@import 'vendors/materialize.scss';
 @import 'vendors/material-icons.scss';
 @import 'vendors/font-awesome/font-awesome.scss';
 @import '../../../../node_modules/cropper/dist/cropper.scss';
+@import '../../../../node_modules/materialize-sass/sass/materialize.scss';
 @import '_mixins.scss';
 @import '_item.scss';
 @import '_classes.scss';
-

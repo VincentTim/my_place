@@ -125,7 +125,7 @@ class PostController extends Controller
     public function contributePost(Request $request){
 
         $dispatcher = new EventDispatcher();
-        $subscriber = new PostListener($this->get('entity.management'));
+        $subscriber = new PostListener($this->get('entity.management'), null, $this->get('router'));
         $dispatcher->addSubscriber($subscriber);
 
         $post = new Post();
@@ -154,7 +154,7 @@ class PostController extends Controller
                         $this->get('entity.management')->add($post);
                     }
 
-                    $response = $this->redirect($this->generateUrl('post_list'));
+                    $response = $this->redirect($this->generateUrl('homepage'));
 
                     return $response;
 

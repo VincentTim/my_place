@@ -44,17 +44,21 @@ module.exports = function(context){
     function openModal(){
         $('.open-modal').click(function(e){
             e.preventDefault();
-            $('#modal1').modal('open');
 
-            window.history.pushState('obj', 'newtitle', $('#modal1').data('uri')+'/'+$(this).data('id'));
+            if($(window).width() > 361){
+              $('#modal1').modal('open');
 
-            $.ajax({
-                url: $('#modal1').data('uri')+'/'+$(this).data('id'),
-                type: 'post',
-                success: function(html){
-                    $('#modal1 .modal-content').html(html);
-                }
-            })
+              window.history.pushState('obj', 'newtitle', $('#modal1').data('uri')+'/'+$(this).data('id'));
+
+              $.ajax({
+                  url: $('#modal1').data('uri')+'/'+$(this).data('id'),
+                  type: 'post',
+                  success: function(html){
+                      $('#modal1 .modal-content').html(html);
+                  }
+              })
+            }
+
 
         })
     }

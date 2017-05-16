@@ -36,17 +36,40 @@
 
     <section class="post_container container">
         <div class="row">
-            <div class="post_wrapper col l12">
-                <div class="row">
+            <div class="post_wrapper col s12 m12 l12 xl12">
+              <div class="row">
+                  <div class="col s12 m12 l8 xl8"><div class="item-collection"></div></div>
+
                     {% for post in posts %}
+                      {% if loop.index == 1 %}
                         {% set tabfruit = [] %}
                         {% for t in post.tags %}
                             {% set tabfruit = tabfruit|merge([t.name]) %}
                         {% endfor %}
-
-                        <div class="item col l1 open-modal content-c{{ post.id }}" data-tags="{{ tabfruit|join(',') }}" data-id="{{ post.id }}">
+                        <div class="col s12 m4 l4 xl4 open-modal" data-id="{{ post.id }}">
+                        <div class="item content-c{{ post.id }}" data-tags="{{ tabfruit|join(',') }}">
 
                         </div>
+                        </div>
+                        {% endif %}
+
+                    {% endfor %}
+
+              </div>
+                <div class="row">
+
+                    {% for post in posts %}
+                    {% if loop.index > 1 %}
+                        {% set tabfruit = [] %}
+                        {% for t in post.tags %}
+                            {% set tabfruit = tabfruit|merge([t.name]) %}
+                        {% endfor %}
+                        <div class="col s12 m4 l4 xl4 open-modal" data-id="{{ post.id }}">
+                        <div class="item content-c{{ post.id }}" data-tags="{{ tabfruit|join(',') }}">
+
+                        </div>
+                        </div>
+                      {% endif %}
 
                     {% endfor %}
                 </div>

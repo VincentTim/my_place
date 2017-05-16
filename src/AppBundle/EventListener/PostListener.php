@@ -20,11 +20,12 @@ class PostListener implements EventSubscriberInterface
 {
     private $entityManagement;
     private $curl;
-
-    public function __construct(EntityManagement $entityManagement, CurlRequest $curl = null)
+    private $router;
+    public function __construct(EntityManagement $entityManagement, CurlRequest $curl = null, $router)
     {
         $this->entityManagement = $entityManagement;
         $this->curl = $curl;
+        $this->router = $router;
     }
 
     public static function getSubscribedEvents()
@@ -216,8 +217,13 @@ class PostListener implements EventSubscriberInterface
        $str = $caption->getText();
        preg_match_all("/(#\w+)/", $str, $matches, PREG_OFFSET_CAPTURE);
 
+       $arraySearch = array();
+       $arrayReplace = array();
+
         foreach($matches[0] as $tag){
+            array_push($arraySearch, $tag[0]);
             $name = str_replace('#', "", $tag[0]);
+            array_push($arrayReplace, str_replace($name, '<a href="'.$this->router->generate('post_explore', array('tag' => $name)).'">#'.$name.'</a>', $tag[0]));
             $existingTag = $this->entityManagement->rep('Tag')->findBy(array('name'=>$name));
 
             if(empty($existingTag)){
@@ -230,8 +236,7 @@ class PostListener implements EventSubscriberInterface
             $post->addTag($term);
         }
 
-       $regex = "/#+([a-zA-Z0-9_]+)/";
-	   $str = preg_replace($regex, '<a href="#">$0</a>', $str);
+        $str = str_replace($arraySearch, $arrayReplace, $str);
         
 	   return($str);
     }
@@ -296,12 +301,10 @@ class PostListener implements EventSubscriberInterface
             } else {
                 $caption = $description;
             }
+
+            $str = $this->hashTag($caption, $post);
             $caption->setIdInstagram($media['caption']['id']);
 
-            $str = $media['caption']['text'];
-            preg_match_all("/(#\w+)/", $str, $matches, PREG_OFFSET_CAPTURE);
-            $regex = "/#+([a-zA-Z0-9_]+)/";
-            $str = preg_replace($regex, '<a href="#">$0</a>', $str);
             $caption->setText($str);
             $caption->setCreated($media['caption']['created_time']);
 

@@ -10,13 +10,15 @@ module.exports = function(context){
         $('.item').each(function(){
             var elt = $(this);
             var imageHeight = elt.width();
+            console.log(elt.parent().data('id')+','+imageHeight);
             elt.css('height', imageHeight + 'px');
+            $('.item-collection').css('height', imageHeight + 'px');
         })
     }
 
 
     function init(){
-        initItem();
+        //initItem();
     }
 
     return {

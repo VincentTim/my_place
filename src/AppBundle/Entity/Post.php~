@@ -1,0 +1,87 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Post
+ *
+ * @ORM\Table(name="post")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PostRepository")
+ * @ORM\HasLifecycleCallbacks()
+ */
+class Post
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var \String
+     *
+     * @ORM\Column(name="id_instagram", type="string", unique=true, nullable=true)
+     */
+    private $id_instagram;
+
+    /**
+     * @var \String
+     *
+     * @ORM\Column(name="created", type="string")
+     */
+    private $created;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_instagram", type="boolean", nullable=true)
+     */
+    private $is_instagram;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Mime", inversedBy="posts")
+     */
+    private $type;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="link", type="string", length=255, nullable=true)
+     */
+    private $link;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="likes", type="string", length=255, nullable=true)
+     */
+    private $likes;
+
+    /**
+     * @var
+     * @ORM\ManyToOne(targetEntity="Image", inversedBy="posts", cascade={"persist"})
+     */
+    private $image;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Location", inversedBy="posts", cascade={"persist"})
+     */
+    private $location;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Caption", inversedBy="posts", cascade={"persist", "remove"})
+     */
+    private $caption;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Tag", cascade={"persist"})
+     */
+    private $tags;
+
+
+}

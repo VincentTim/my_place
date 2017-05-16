@@ -9,18 +9,20 @@ module.exports = function(context){
     function displayTag(){
         console.log($('.post_container .item').length);
 
-        $('.post_container').find('.item').each(function(){
-            var elt = $(this);
-            var arrayTags = elt.data('tags').split(','); /*'test, test, test'*/
+        if($(window).width() > 361){
+          $('.post_container').find('.item').each(function(){
+              var elt = $(this);
+              var arrayTags = elt.data('tags').split(','); /*'test, test, test'*/
 
-            elt.mouseenter(function(){
-                var number = Math.floor((Math.random() * arrayTags.length -1 ) + 1);
-                elt.append('<p class="array">#'+arrayTags[number]+'</p>');
-            });
-            elt.mouseleave(function(){
-                elt.find('.array').remove();
-            })
-        })
+              elt.mouseenter(function(){
+                  var number = Math.floor((Math.random() * arrayTags.length -1 ) + 1);
+                  elt.append('<p class="array">#'+arrayTags[number]+'</p>');
+              });
+              elt.mouseleave(function(){
+                  elt.find('.array').remove();
+              })
+          })
+        }
     }
 
 
